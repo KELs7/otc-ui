@@ -1,0 +1,38 @@
+{
+    "offers":[
+        {
+            "offer_id": "hgdhsgdhgdgsjdgdggdhfdfgdfgdfgdgdgdfgdfgfgdfsgdfgsdfgfdgsfdgsbbb",
+            "maker": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "taker": null,
+            "offer_token" :"con_lusd_lst001",
+            "offer_amount": "2500",
+            "take_token": "currency",
+            "take_amount": 500,
+            "fee": 10,
+            "state": "OPEN"
+
+        },
+        {
+            "offer_id": "hgdhsgdhgdgsjdgdggdhfdfgdfgdfgdgdgdfgdfgfgdfsgdfgsdfgfdgsfdgsbbb",
+            "maker": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "taker": null,
+            "offer_token" :"con_lusd_lst001",
+            "offer_amount": "2500",
+            "take_token": "currency",
+            "take_amount": 500,
+            "fee": 10,
+            "state": "OPEN"
+        },
+        {
+            "offer_id": "hgdhsgdhgdgsjdgdggdhfdfgdfgdfgdgdgdfgdfgfgdfsgdfgsdfgfdgsfdgsbbb",
+            "maker": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "taker": null,
+            "offer_token" :"con_lusd_lst001",
+            "offer_amount": "2500",
+            "take_token": "currency",
+            "take_amount": 500,
+            "fee": 10,
+            "state": "OPEN"
+        }
+    ]
+}
