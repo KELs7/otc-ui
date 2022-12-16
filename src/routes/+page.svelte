@@ -1,9 +1,8 @@
 <script lang="ts">
   import CopyToClipboard from '$lib/components/copyToClipboard.svelte';
-
-  // const handleE = (e: any)=>{
-  //   text = e.target.dataset.offerId
-  // }
+  
+  export let data: any;
+  const { offers } = data
 
   const handleSuccessfulCopy = (e: any)=>{
     alert('success copied')
@@ -13,48 +12,43 @@
     alert('copied failed')
   }
 
-  //mock data
-  import { offer_store } from '../stores';
-	
-
-
-
 </script>
 
+<!--TODO: show loader when nothing is being loaded-->
+
 <table class="u-full-width">
-    <thead>
+  <thead>
+    <tr>
+      <th>Offer id</th>
+      <th>Maker</th>
+      <th>Offer</th>
+      <th>Take</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each offers as offer_data}
       <tr>
-        <th>Offer id</th>
-        <th>Maker</th>
-        <th>Offer</th>
-        <th>Take</th>
+          <td>
+            <CopyToClipboard on:copy={handleSuccessfulCopy} on:fail={handleFailedCopy} let:copy>
+              <button data-offer-id={offer_data.offer_id} on:click={copy}>copy id</button>
+            </CopyToClipboard>
+            
+          </td>
+          <td>{offer_data.maker}</td>
+          <td>{offer_data.offer}</td>
+          <td>{offer_data.take}</td>
       </tr>
-    </thead>
-    <tbody>
-      <!-- <tr>
-        <td>Dave Gamache</td>
-        <td>26</td>
-        <td>Male</td>
-        <td>San Francisco</td>
-      </tr>
-      <tr>
-        <td>Dwayne Johnson</td>
-        <td>42</td>
-        <td>Male</td>
-        <td>Hayward</td>
-      </tr> -->
-      {#each $offer_store as offer_data}
-        <tr>
-            <td>
-              <CopyToClipboard on:copy={handleSuccessfulCopy} on:fail={handleFailedCopy} let:copy>
-                <button data-offer-id={offer_data.offer_id} on:click={copy}>copy id</button>
-              </CopyToClipboard>
-              
-            </td>
-            <td>{offer_data.maker}</td>
-            <td>{offer_data.offer}</td>
-            <td>{offer_data.take}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+    {/each}
+  </tbody>
+</table>
+
+<style>
+  table{
+    color: var(--font-color);
+    /*background-color: var(--form-color);*/
+  }
+  button{
+    color: var(--font-color);
+  }
+</style>
+
