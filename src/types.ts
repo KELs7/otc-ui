@@ -3,14 +3,14 @@ export interface I_Offer{
     maker: string ;
     taker: string | undefined | null; 
     offer_token :string;
-    offer_amount: number; 
+    offer_amount: number | any; 
     take_token: string;
-    take_amount: number;
-    fee: number;
+    take_amount: number | any;
+    fee: number | any;
     state: string;
 }
 
-export interface I_ProcessedOffer{
+export interface I_FormatttedForTable{
     offer_id: string;
     maker: string;
     offer: string;
