@@ -1,3 +1,17 @@
+:root {
+  --background-color: #372F7A;
+  --font-color: #CFFFF2;
+  --form-color: #9064C1;
+  --table-color: #6548AB;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+}
+
+
 .flex {
     display: flex; 
 }
@@ -18,5 +32,14 @@
 .flex.center{
     display: flex; 
     justify-content:center;
+}
+
+.flex.align-center{
+    display: flex; 
+    align-items:center;
+}
+.flex.j-space-between{
+    display: flex; 
+    justify-content: space-between;
 }
 
