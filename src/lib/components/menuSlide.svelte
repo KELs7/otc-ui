@@ -30,7 +30,7 @@
 			>
 			
 			
-				<a sveltekit:prefetch href={menuItem.route} class="flex align-center">
+				<a data-sveltekit-prefetch href={menuItem.route} class="flex align-center">
 					
 						{menuItem.label}
 				
