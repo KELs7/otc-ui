@@ -1,7 +1,8 @@
 import axios from "axios"
 import type { I_Offer, I_FormatttedForTable } from "../types";
 import { blockservice, connectionRequest, supportedTokens } from "../configs";
-import {  balance_tau_store } from '../stores'
+import {  balance_tau_store, vk_store } from '../stores'
+import { get } from 'svelte/store'
 
 //mock data
 //import bs_data from '../lib/mock-data/offers.json';
@@ -86,14 +87,16 @@ function getValueFromFixed(isItFixed: any): number{
     return value
 }
 
-export async function getTauBalance(vk: string) {
+export async function getTauBalance() {
+    console.log(get(vk_store))
     try {
 
         for (let bs of blockservice){
-            const balance: any = (await axios.get(`https://${blockservice}/current/one/currency/balances/${vk}`)).data
+            const balance: any = (await axios.get(`https://${bs}/current/one/currency/balances/${get(vk_store)}`)).data
+            
             if(balance){
                 balance_tau_store.set(getValueFromFixed(balance.value).toFixed(8))
-                console.log(balance)
+                //console.log(vk_store)
                 return
             }
         }
