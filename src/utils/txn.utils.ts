@@ -10,18 +10,12 @@ import { checkInputs } from './validation.util';
 
 export const sendTransaction = async (transaction: I_TransactionObj): Promise<void> =>{
     checkInputs(transaction.kwargs)
-    await get(lwc_store).sendTransaction(transaction, handleTxnResult) 
     
-    //timeout for returning button to active state
-    setTimeout(()=>{
-        form_button_inactive_store.set({form: ""})
-    }, 5000)
+    await get(lwc_store).sendTransaction(transaction, handleTxnResult)
 }
 
 //callback function to operate on returned txn result
 export const handleTxnResult = (e: any)=>{
-    //DEBUG
-    console.log(e)
     //handle txn results
 
     const { data } = e
