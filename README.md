@@ -4,7 +4,7 @@ User interface for Lamden OTC contract(con_otc002)
 
 ## Developing
 
-To see ui
+To see ui:
 
 ```bash
 git clone https://github.com/KELs7/otc-ui.git
