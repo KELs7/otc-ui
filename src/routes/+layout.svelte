@@ -2,6 +2,7 @@
     //css
     import '$lib/css/app.css';
     import '$lib/css/skeleton/skeleton.css';
+    import { onMount } from 'svelte';
     
     //utils
     import { 
@@ -10,8 +11,6 @@
         getCurrentWalletInfo,
         isWalletInstalled
     } from '../utils/connections.utils'
-
-    import { getTauBalance } from '../utils/api.utils'
     
     //stores
     import { 
@@ -31,21 +30,21 @@
     import { page } from '$app/stores';
 
     $: current_route = $page.url.pathname 
+   
 
-    if(browser){
+    onMount(()=>{
         initWalletController();
-        getCurrentWalletInfo(); 
-        getTauBalance();
-    
-    }
+        getCurrentWalletInfo();
+        isWalletInstalled() 
 
-    
-    
+        $lwc_store?.events.on('newInfo', handleWalletInfo)
+
+    })
+
     const connect = ()=>{
         isWalletInstalled()
     }
 
-    $lwc_store?.events.on('newInfo', handleWalletInfo)
     
 </script>
 
