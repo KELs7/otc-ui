@@ -6,12 +6,12 @@ import {
     form_button_inactive_store,
     toast_store
 } from '../stores';
-import { checkInputs } from './validation.util';
+
 
 export const sendTransaction = async (transaction: I_TransactionObj): Promise<void> =>{
-    checkInputs(transaction.kwargs)
     
     await get(lwc_store).sendTransaction(transaction, handleTxnResult)
+    
 }
 
 //callback function to operate on returned txn result
