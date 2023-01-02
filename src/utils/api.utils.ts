@@ -80,35 +80,11 @@ function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
     return formatted
 }
 
-function getValueFromFixed(isItFixed: any): number{
-    let value: number;
-    if(isItFixed===null)return 0
-    isItFixed.__fixed__?value = Number(isItFixed.__fixed__): value = Number(isItFixed)
-    return value
-}
-
-export async function getTauBalance() {
-    console.log(get(vk_store))
-    try {
-
-        for (let bs of blockservice){
-            const balance: any = (await axios.get(`https://${bs}/current/one/currency/balances/${get(vk_store)}`)).data
-            
-            if(balance){
-                balance_tau_store.set(getValueFromFixed(balance.value).toFixed(8))
-                //console.log(vk_store)
-                return
-            }
-        }
-        
-    } catch (err) {
-        console.log(err)
-    }
-}
-
 function assignTokenSymbol(contract: string): string{
     let st = Object.keys(supportedTokens)
     for(let t of st){
         if(contract === t)return supportedTokens[t]
     }
 }
+
+ 
