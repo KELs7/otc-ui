@@ -1,7 +1,14 @@
-import WalletController from 'lamden_wallet_controller';
+import WalletController from '$lib/walletController';
+import axios from "axios";
 import { get } from 'svelte/store';
-import { connectionRequest } from '../configs'
-import { lwc_store, vk_store, toast_store } from '../stores';
+import { blockservice, connectionRequest } from '../configs';
+import { 
+    lwc_store, 
+    balance_tau_store,
+    vk_store, 
+    toast_store, 
+    form_button_inactive_store 
+} from '../stores';
 
 
 export const handleWalletInfo = (wInfo)=> {
@@ -15,7 +22,8 @@ export const handleWalletInfo = (wInfo)=> {
         }, 4000)
         return
     }
-    vk_store.set(wInfo.wallets[0])
+    vk_store.set(wInfo.wallets[0]);
+    getTauBalance(wInfo.wallets[0]);
 }
 //export const handleTxnInfo = (txInfo)=> console.log("tttt")
 
@@ -42,4 +50,32 @@ export const isWalletInstalled = ()=>{
 
 export const getCurrentWalletInfo = ()=>{
     get(lwc_store).getInfo()
+}
+
+function getValueFromFixed(isItFixed: any): number{
+    let value: number;
+    if(isItFixed===null)return 0
+    isItFixed.__fixed__?value = Number(isItFixed.__fixed__): value = Number(isItFixed)
+    return value
+}
+
+async function getTauBalance(vk: string) {
+    try {
+        // for (let bs of blockservice){
+        //     const balance: any = (await axios.get(`https://${bs}/current/one/currency/balances/${get(vk_store)}`)).data
+        //     const bal  = getValueFromFixed(balance.value)
+        //     if(bal => 0){
+        //         balance_tau_store.set(getValueFromFixed(balance.value).toFixed(8))
+        //         //console.log(vk_store)
+        //         return
+        //     }
+        // }
+        const balance: any = (await axios.get(`https://${blockservice[0]}/current/one/currency/balances/${vk}`)).data
+        const bal  = getValueFromFixed(balance.value)
+        balance_tau_store.set(bal.toFixed(8))
+        //console.log(get(balance_tau_store))
+        
+    } catch (err) {
+        console.log(err)
+    }
 }
