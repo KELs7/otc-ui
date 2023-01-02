@@ -65,6 +65,13 @@ function processBlockserviceData(bs_data: any): I_Offer[]{
     return processed
 }
 
+function getValueFromFixed(isItFixed: any): number{
+    let value: number;
+    if(isItFixed===null)return 0
+    isItFixed.__fixed__?value = Number(isItFixed.__fixed__): value = Number(isItFixed)
+    return value
+}
+
 function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
     let formatted = []
     
