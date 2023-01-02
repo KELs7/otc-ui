@@ -1,11 +1,11 @@
 //##########Wallet Cnnnection Config##############################
 
 export const connectionRequest = {
-    appName: 'OTC dApp',
-    version: '1.0.0', 
-    logo: 'otc-logo.svg', 
-    contractName: 'con_otc001', 
-    networkType: 'mainnet'
+    appName: "OTC dApp",
+    version: "1.0.0", 
+    logo: "otc-logo.svg", 
+    contractName: "con_otc001", 
+    networkType: "mainnet"
 }
 
 //##########Supported Tokens##############################
@@ -42,25 +42,38 @@ let cancelOfferKwargs = {
     offer_id: "",
 }
 
-export let makeOffer = {
-   
+let approveOTCKwargs = {
+    to: connectionRequest.contractName,
+    amount: 0
+}
+
+export let makeOfferTxInfo = {
     networkType: "mainnet",
     methodName: "make_offer",
     kwargs: makeOfferKwargs, 
     stampLimit: 100
     
 }
-export let takeOffer = {
+export let takeOfferTxInfo = {
     networkType: "mainnet",
     methodName: "take_offer",
     kwargs: takeOfferKwargs, 
     stampLimit: 100
     
 }
-export let cancelOffer = {
+export let cancelOfferTxInfo = {
     networkType: "mainnet",
     methodName: "cancel_offer",
     kwargs: cancelOfferKwargs, 
+    stampLimit: 100
+    
+}
+
+export let approveOTCcontractTxInfo = {
+    networkType: "mainnet",
+    contractName: "",
+    methodName: "approve",
+    kwargs: approveOTCKwargs, 
     stampLimit: 100
     
 }
