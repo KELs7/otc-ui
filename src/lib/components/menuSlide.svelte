@@ -51,14 +51,16 @@
 		margin: 0;
 		position: fixed;
 		z-index: 10; 
-		width: 69.6vw;
+		width: 70vw;
 		left: -72vw;
 		height: 100vh;
 		top: 14vh; 
+		bottom: 0;
 		font-size: 2.5vh;
 		font-weight: 600;
-		color: var(--background-color);
-		background-color: var(--table-color);
+		/*color: var(--background-color);*/
+		/*background-color:  #33c3f0;*/
+		background-color:  black;
 		transition: left 500ms ease;
 	}
 	ul {
