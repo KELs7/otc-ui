@@ -1,0 +1,8 @@
+{
+	"/": [
+		"src/routes/+page.ts"
+	],
+	"/offers": [],
+	"/create_offer": [],
+	"/make_offer": []
+}
