@@ -5,7 +5,8 @@ export const connectionRequest = {
     version: "1.0.0", 
     logo: "otc-logo.svg", 
     contractName: "con_otc001", 
-    networkType: "mainnet"
+    networkType: "testnet",
+    networkName: "arko"
 }
 
 //##########Supported Tokens##############################
