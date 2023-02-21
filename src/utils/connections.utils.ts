@@ -2,7 +2,7 @@ import WalletController from '$lib/walletController';
 import axios from "axios";
 import { get } from 'svelte/store';
 import { blockservices, connectionRequest } from '../configs';
-import { walkThroughBsUrls } from './api.utils';
+import { randoBSfetchCall } from './api.utils';
 import { 
     lwc_store, 
     balance_tau_store,
@@ -62,7 +62,7 @@ function getValueFromFixed(isItFixed: any): number{
 
 async function getTauBalance(vk: string) {
     try {   
-        const bs_data =  await walkThroughBsUrls("currency", "balances", vk)
+        const bs_data =  await randoBSfetchCall("currency", "balances", vk)
         const bal  = getValueFromFixed(bs_data)
         balance_tau_store.set(bal.toFixed(8))    
 
