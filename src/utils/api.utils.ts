@@ -30,7 +30,7 @@ export async function syncOffers(): Promise<any> {
 }
 
 function processBlockserviceData(bs_data: any): I_Offer[]{
-    const offersData : any = bs_data.con_otc001.data
+    const offersData : any = bs_data.con_otc002.data
     const ids: string[] = Object.keys(offersData)
 
     let processed = []
@@ -68,14 +68,14 @@ function getValueFromFixed(isItFixed: any): number{
     return value
 }
 
-function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
+async function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
     let formatted = []
     
     for(let f of processed){
         const offer_id = f.offer_id
         const maker = `${f.maker.slice(0, 4)}. . .${f.maker.slice(61, 64)}`
-        const offer = `${getValueFromFixed(f.offer_amount)} ${assignTokenSymbol(f.offer_token)}`
-        const take = `${getValueFromFixed(f.take_amount)} ${assignTokenSymbol(f.take_token)}`
+        const offer = `${getValueFromFixed(f.offer_amount)} ${await getTokenSymbol(f.offer_token)}`
+        const take = `${getValueFromFixed(f.take_amount)} ${await getTokenSymbol(f.take_token)}`
 
         formatted.push({ offer_id, maker, offer, take })
     }
@@ -88,6 +88,11 @@ function assignTokenSymbol(contract: string): string{
     for(let t of st){
         if(contract === t)return supportedTokens[t]
     }
+}
+
+async function getTokenSymbol(contract: string){
+    const res = await axios.get(`https://testnet-v2-bs-sf.lamden.io/current/one/${contract}/metadata/token_symbol`)
+    return res.data.value
 }
 
  
