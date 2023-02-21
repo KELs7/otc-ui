@@ -2,7 +2,7 @@ import axios from "axios"
 import type { I_Offer, I_FormatttedForTable } from "../types";
 import { blockservices, connectionRequest } from "../configs";
 
-export async function walkThroughBsUrls(contract: string, variable: string, key: string|any){
+export async function randoBSfetchCall(contract: string, variable: string, key: string|any){
 
     let n = Math.floor(Math.random() * 3);
     let bs = blockservices[n]
@@ -19,7 +19,7 @@ export async function walkThroughBsUrls(contract: string, variable: string, key:
 export async function syncOffers(): Promise<any> {
     try {
 
-        const bs_data =  await walkThroughBsUrls(connectionRequest.contractName, "data", undefined)
+        const bs_data =  await randoBSfetchCall(connectionRequest.contractName, "data", undefined)
 
         const processed: I_Offer[]  = processBlockserviceData(bs_data)
 
@@ -87,7 +87,7 @@ async function formatForTable(processed: I_Offer[]): Promise<I_FormatttedForTabl
 }
 
 async function getTokenSymbol(contract: string){
-    const tokenSymbol = await walkThroughBsUrls(contract, "metadata", "token_symbol")
+    const tokenSymbol = await randoBSfetchCall(contract, "metadata", "token_symbol")
     return tokenSymbol
 }
 
