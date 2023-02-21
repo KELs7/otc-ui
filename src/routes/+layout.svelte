@@ -17,7 +17,6 @@
         lwc_store, 
         vk_store, 
         balance_tau_store, 
-        toast_store, 
         menu_slide_store 
     } from '../stores';
     
@@ -26,7 +25,6 @@
     import MenuSlide from '$lib/components/menuSlide.svelte';
     
     //environment
-    import { browser } from '$app/environment';
     import { page } from '$app/stores';
 
     $: current_route = $page.url.pathname 
@@ -73,7 +71,7 @@
                 { $vk_store?`${$balance_tau_store} TAU | ${$vk_store.slice(0, 4)}. . .${$vk_store.slice(61, 64)}`: "connect wallet" }
             </button>
             <img class="menu-burger" src="menu-burger.svg" alt="menu" 
-            on:click={menu_slide_store.set($menu_slide_store?false:true)} on:keyup/>
+                on:click={()=>menu_slide_store.set($menu_slide_store?false:true)} on:keyup/>
         </div>
         
     </div>
