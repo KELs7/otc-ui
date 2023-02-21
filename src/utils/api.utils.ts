@@ -1,14 +1,17 @@
 import axios from "axios"
 import type { I_Offer, I_FormatttedForTable } from "../types";
-import { blockservice, connectionRequest, supportedTokens } from "../configs";
-import {  balance_tau_store, vk_store } from '../stores'
-import { get } from 'svelte/store'
+import { blockservices, connectionRequest } from "../configs";
 
-async function walkThroughBsUrls(contract: string, variable: string){
-    //TODO: provide a timeout to avoid getting stuck when all blockservices are offline
-    for (let bs of blockservice){
+export async function walkThroughBsUrls(contract: string, variable: string, key: string|any){
+
+    let n = Math.floor(Math.random() * 3);
+    let bs = blockservices[n]
+    if(key === undefined){
         const res = await axios.get(`https://${bs}/current/all/${contract}/${variable}`) 
         if(res.data) return res.data
+    } else {
+        const res = await axios.get(`https://${bs}/current/one/${contract}/${variable}/${key}`)
+        if(res.data) return res.data.value
     }
 
 }
@@ -16,7 +19,7 @@ async function walkThroughBsUrls(contract: string, variable: string){
 export async function syncOffers(): Promise<any> {
     try {
 
-        const bs_data =  await walkThroughBsUrls(connectionRequest.contractName, "data")
+        const bs_data =  await walkThroughBsUrls(connectionRequest.contractName, "data", undefined)
 
         const processed: I_Offer[]  = processBlockserviceData(bs_data)
 
@@ -33,7 +36,7 @@ function processBlockserviceData(bs_data: any): I_Offer[]{
     const offersData : any = bs_data.con_otc002.data
     const ids: string[] = Object.keys(offersData)
 
-    let processed = []
+    let processed: I_Offer[] = []
     for(let id of ids){
         
         const { 
@@ -69,7 +72,7 @@ function getValueFromFixed(isItFixed: any): number{
 }
 
 async function formatForTable(processed: I_Offer[]): Promise<I_FormatttedForTable[]> {
-    let formatted = []
+    let formatted: I_FormatttedForTable[]= []
     
     for(let f of processed){
         const offer_id = f.offer_id
@@ -84,8 +87,8 @@ async function formatForTable(processed: I_Offer[]): Promise<I_FormatttedForTabl
 }
 
 async function getTokenSymbol(contract: string){
-    const res = await axios.get(`https://testnet-v2-bs-sf.lamden.io/current/one/${contract}/metadata/token_symbol`)
-    return res.data.value
+    const tokenSymbol = await walkThroughBsUrls(contract, "metadata", "token_symbol")
+    return tokenSymbol
 }
 
  
