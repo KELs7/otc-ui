@@ -4,9 +4,6 @@ import { blockservice, connectionRequest, supportedTokens } from "../configs";
 import {  balance_tau_store, vk_store } from '../stores'
 import { get } from 'svelte/store'
 
-//mock data
-//import bs_data from '../lib/mock-data/offers.json';
-
 async function walkThroughBsUrls(contract: string, variable: string){
     //TODO: provide a timeout to avoid getting stuck when all blockservices are offline
     for (let bs of blockservice){
@@ -18,7 +15,6 @@ async function walkThroughBsUrls(contract: string, variable: string){
    
 export async function syncOffers(): Promise<any> {
     try {
-        //const bs_data = (await axios.get(`https://${blockservice[0]}/current/all/${connectionRequest.contractName}/data`)).data as I_Offer[]
 
         const bs_data =  await walkThroughBsUrls(connectionRequest.contractName, "data")
 
