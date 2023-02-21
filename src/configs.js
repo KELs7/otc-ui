@@ -65,7 +65,7 @@ export let approveOTCcontractTxInfo = {
 
 //##########Blockservice Config##############################
 
-export let blockservice = [
+export let blockservices = [
     "testnet-v2-bs-sf.lamden.io",
     "testnet-v2-bs-bang.lamden.io",
     "testnet-v2-bs-lon.lamden.io"
