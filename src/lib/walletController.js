@@ -1,6 +1,6 @@
 'use strict'
 
-class WalletController {
+export default class WalletController {
     /**
      * Lamden Wallet Controller Class
      *
@@ -17,6 +17,7 @@ class WalletController {
      * @param {string} connectionRequest.version Connection version. Older version will be over-written in the uers's wallet.
      * @param {string} connectionRequest.contractName The smart contract your DAPP will transact to
      * @param {string} connectionRequest.networkType Which Lamden network the approval is for (mainnet or testnet) are the only options
+     * @param {string} connectionRequest.networkName Which Lamden Network, Arko being the newest.
      * @param {string} connectionRequest.logo The reletive path of an image on your webserver to use as a logo for your Lamden Wallet Linked Account
      * @param {string=} connectionRequest.background The reletive path of an image on your webserver to use as a background for your Lamden Wallet Linked Account
      * @param {string=} connectionRequest.charms.name Charm name
@@ -34,9 +35,12 @@ class WalletController {
         this.locked = null;
         this.approvals = {};
         this.approved = false;
+        this.verified_account = false
         this.autoTransactions = false;
         this.walletAddress = ""
         this.callbacks = {};
+        this.nacl_setup = false
+
         document.addEventListener('lamdenWalletInfo', (e) => {
             this.installed = true;
             let data = e.detail;
@@ -46,13 +50,24 @@ class WalletController {
                     if (typeof data.locked !== 'undefined') this.locked = data.locked
 
                     if (data.wallets.length > 0) this.walletAddress = data.wallets[0]
-                    if (typeof data.approvals !== 'undefined') {
-                        this.approvals = data.approvals
-                        let approval = this.approvals[this.connectionRequest?.networkType]
-                        if (approval){
-                            if (approval.contractName === this.connectionRequest.contractName){
-                                this.approved = true;
-                                this.autoTransactions = approval.trustedApp
+                    if (typeof data.approvals !== 'undefined' && this.connectionRequest) {
+
+                        const { networkType, networkName } = this.connectionRequest
+
+                        if (networkType && networkName){
+                            this.approvals = data.approvals
+                            let approval = null
+
+                            if (networkName === "legacy" && networkType){
+                                approval = this.approvals[networkType]
+                            }else{
+                                approval = this.approvals[networkName][networkType]
+                            }
+                            if (approval){
+                                if (approval.contractName === this.connectionRequest.contractName){
+                                    this.approved = true;
+                                    this.autoTransactions = approval.trustedApp
+                                }
                             }
                         }
                     }
@@ -72,14 +87,10 @@ class WalletController {
                 const { errors, status, rejected, txData, txBlockResult } = txResult
     
                 if (errors){
+                    let uid;
                     if (errors.length > 0) {
-                        //let { uid } = txData
-                        let uid;
-						if(txData!=undefined){
-							let {uid} = txData;
-							console.log(uid)
-							uid = uid;
-						}
+                        let { uid } = txData
+                        uid = uid
     
                         if (status === "Transaction Cancelled" && rejected){
                             let rejectedTxData = JSON.parse(rejected)
@@ -154,6 +165,7 @@ class WalletController {
      * @param {string} connectionRequest.version Connection version. Older version will be over-written in the uers's wallet.
      * @param {string} connectionRequest.contractName The smart contract your dApp will transact through
      * @param {string} connectionRequest.networkType Which Lamden network the approval is for (Mainnet or testnet)
+     * @param {string} connectionRequest.networkName Which Lamden Network the tx if for (legacy or arko)
      * @param {string=} connectionRequest.background A reletive path to an image to override the default lamden wallet account background
      * @param {string} connectionRequest.logo A reletive path to an image to use as a logo in the Lamden Wallet
      * @param {string=} connectionRequest.charms.name Charm name
@@ -186,6 +198,7 @@ class WalletController {
      * @param {string} tx.networkType Which Lamden network the tx is for (Mainnet or testnet)
      * @param {string} tx.stampLimit The max Stamps this tx is allowed to use. Cannot be more but can be less.
      * @param {string} tx.methodName The method on your approved smart contract to call
+     * @param {string} tx.networkName Which Lamden Network the tx if for (legacy or arko)
      * @param {Object} tx.kwargs A keyword object to supply arguments to your method
      * @param {Function=} callback A function that will called and passed the tx results.
      * @fires txStatus
@@ -194,6 +207,36 @@ class WalletController {
         tx.uid = new Date().toISOString()
         if (typeof callback === 'function') this.callbacks[tx.uid] = callback
         document.dispatchEvent(new CustomEvent('lamdenWalletSendTx', {detail: JSON.stringify(tx)}));
+    }
+    /**
+     * Creates a "dappVerify" event to send challenge for the wallet to sign with the user's account.
+     * If a callback is specified here then it will be called with the transaction result.
+     *
+     * This will fire the "dappVerified" events.on event
+     * @param {string} challenge A string with a max length of 64 characters.
+     * @param {string} vk A string hex representing the vk of the account you are verifying.
+     * @param {Function=} callback An optional function that will provide the result of the verification.
+     * @fires dappVerified
+     */
+    sign_challenge(challenge, vk, callback = undefined){
+        return new Promise((resolve, reject) => {
+            const handleConnecionResponse = (e) => {
+                try{
+                    this.events.emit('dappVerified', e.detail)
+                    resolve(e.detail);
+                    if (callback) callback(e.detail)
+                }catch(e){
+                    this.events.emit('dappVerified', {error: e.message})
+                    reject({error: e.message})
+                    callback({error: e.message})
+                }finally{
+                    document.removeEventListener("dappVerified", handleConnecionResponse);
+                }
+
+            }
+            document.addEventListener('dappVerified', handleConnecionResponse, { once: true })
+            document.dispatchEvent(new CustomEvent('dappVerify', {detail: JSON.stringify({challenge, vk})}));
+        })
     }
   }
 
@@ -217,6 +260,7 @@ class WalletConnectionRequest {
         this.version = "";
         this.contractName = "";
         this.networkType = "";
+        this.networkName = "legacy";
         this.logo = "";
         this.background = "";
         this.charms = []
@@ -236,6 +280,7 @@ class WalletConnectionRequest {
             appName: this.appName,
             version: this.version,
             contractName: this.contractName,
+            networkName: this.networkName,
             networkType: this.networkType, logo: this.logo}
         if (this.background.length > 0) info.background = this.background
         if (this.charms.length > 0) info.charms = this.charms
@@ -279,6 +324,4 @@ class MyEventEmitter {
   
       this._events[name].forEach(fireCallbacks);
     }
-  }
-
-export default WalletController;
+}
