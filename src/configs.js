@@ -4,26 +4,9 @@ export const connectionRequest = {
     appName: "OTC dApp",
     version: "1.0.0", 
     logo: "otc-logo.svg", 
-    contractName: "con_otc001", 
+    contractName: "con_otc002", 
     networkType: "testnet",
     networkName: "arko"
-}
-
-//##########Supported Tokens##############################
-
-export const supportedTokens = {
-    currency: "TAU",
-    tau: "TAU",
-    con_rswp_lst001: "RSWP",
-    con_lusd_lst001: "LUSD",
-    con_weth_lst001: "WETH",
-    con_marmite100: "$MARMITE",
-    con_yeti_contract: "YETI",
-    con_reflecttau_v2: "RTAU",
-    con_spang : "SPANG",
-    con_beer: "BEER",
-    con_spooky: "SPOOKY",
-    con_gold_contract: "GOLD"
 }
 
 //##########Transaction Configs##############################
@@ -83,7 +66,9 @@ export let approveOTCcontractTxInfo = {
 //##########Blockservice Config##############################
 
 export let blockservice = [
-    "blockservice.opticprotocol.finance"
+    "testnet-v2-bs-sf.lamden.io",
+    "testnet-v2-bs-bang.lamden.io",
+    "testnet-v2-bs-lon.lamden.io"
 ]
    
     
