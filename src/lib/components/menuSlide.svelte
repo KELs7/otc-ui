@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
 	
 	import { page } from '$app/stores';
 	import { menu_slide_store } from '../../stores'
@@ -23,10 +25,10 @@
 			
 			<li
 				class="flex align-center"
-
 				on:click={()=> {
 					setTimeout(()=> menu_slide_store.set(false), 400);	
 				}}
+				on:keyup
 			>
 			
 			
@@ -89,10 +91,10 @@
 	.slide {
 		left: -1vh;
 	}
-	img {
+	/* img {
 		width: 5vh;
 		margin-right: 2.5vw;
-	}
+	} */
 	
 	@media (max-width: 400px) {
 		.slideNav{
