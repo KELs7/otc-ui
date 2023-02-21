@@ -20,7 +20,7 @@ export async function syncOffers(): Promise<any> {
 
         const processed: I_Offer[]  = processBlockserviceData(bs_data)
 
-        const formatted : I_FormatttedForTable[] = formatForTable(processed)
+        const formatted : Promise<I_FormatttedForTable[]> = formatForTable(processed)
 
         return formatted
 
@@ -68,7 +68,7 @@ function getValueFromFixed(isItFixed: any): number{
     return value
 }
 
-async function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
+async function formatForTable(processed: I_Offer[]): Promise<I_FormatttedForTable[]> {
     let formatted = []
     
     for(let f of processed){
@@ -81,13 +81,6 @@ async function formatForTable(processed: I_Offer[]): I_FormatttedForTable[] {
     }
     
     return formatted
-}
-
-function assignTokenSymbol(contract: string): string{
-    let st = Object.keys(supportedTokens)
-    for(let t of st){
-        if(contract === t)return supportedTokens[t]
-    }
 }
 
 async function getTokenSymbol(contract: string){
