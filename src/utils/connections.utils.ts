@@ -1,7 +1,8 @@
 import WalletController from '$lib/walletController';
 import axios from "axios";
 import { get } from 'svelte/store';
-import { blockservice, connectionRequest } from '../configs';
+import { blockservices, connectionRequest } from '../configs';
+import { walkThroughBsUrls } from './api.utils';
 import { 
     lwc_store, 
     balance_tau_store,
@@ -60,21 +61,11 @@ function getValueFromFixed(isItFixed: any): number{
 }
 
 async function getTauBalance(vk: string) {
-    try {
-        // for (let bs of blockservice){
-        //     const balance: any = (await axios.get(`https://${bs}/current/one/currency/balances/${get(vk_store)}`)).data
-        //     const bal  = getValueFromFixed(balance.value)
-        //     if(bal => 0){
-        //         balance_tau_store.set(getValueFromFixed(balance.value).toFixed(8))
-        //         //console.log(vk_store)
-        //         return
-        //     }
-        // }
-        const balance: any = (await axios.get(`https://${blockservice[0]}/current/one/currency/balances/${vk}`)).data
-        const bal  = getValueFromFixed(balance.value)
-        balance_tau_store.set(bal.toFixed(8))
-        //console.log(get(balance_tau_store))
-        
+    try {   
+        const bs_data =  await walkThroughBsUrls("currency", "balances", vk)
+        const bal  = getValueFromFixed(bs_data)
+        balance_tau_store.set(bal.toFixed(8))    
+
     } catch (err) {
         console.log(err)
     }
