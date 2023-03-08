@@ -8,7 +8,6 @@
     import { 
         initWalletController,
         handleWalletInfo,
-        getCurrentWalletInfo,
         isWalletInstalled
     } from '../utils/connections.utils'
     
@@ -32,7 +31,6 @@
 
     onMount(()=>{
         initWalletController();
-        getCurrentWalletInfo();
         isWalletInstalled() 
 
         $lwc_store?.events.on('newInfo', handleWalletInfo)
