@@ -1,21 +1,21 @@
 import WalletController from '$lib/walletController';
-import axios from "axios";
 import { get } from 'svelte/store';
-import { blockservices, connectionRequest } from '../configs';
+import { connectionRequest } from '../configs';
 import { randoBSfetchCall } from './api.utils';
 import { 
     lwc_store, 
     balance_tau_store,
     vk_store, 
     toast_store, 
-    form_button_inactive_store 
 } from '../stores';
 
+const authError = `You must be an authorized dApp to send this message type.
+ Send 'lamdenWalletConnect' event first to authorize.`
 
 export const handleWalletInfo = (wInfo)=> {
     if (wInfo.errors){
         wInfo.errors.forEach(err => {
-            if(err=="You must be an authorized dApp to send this message type. Send 'lamdenWalletConnect' event first to authorize.")return
+            if(err === authError)return
             toast_store.set({show: true, error:true, message:err})
         })
         setTimeout(()=>{
@@ -24,29 +24,39 @@ export const handleWalletInfo = (wInfo)=> {
         return
     }
     vk_store.set(wInfo.wallets[0]);
-    getTauBalance(wInfo.wallets[0]);
+        
 }
-//export const handleTxnInfo = (txInfo)=> console.log("tttt")
 
-export const initWalletController= ()=>{
-    const lwc = new WalletController(connectionRequest);
+export const initWalletController= ()=>{ 
+    const lwc = new WalletController();
     lwc_store.set(lwc)     
 }
 
 export const isWalletInstalled = ()=>{
-    const lwc = get(lwc_store)
-    
+    const lwc = get(lwc_store);
+    let response;
+
     if(lwc===null){
-        toast_store.set({show: true, error:true, message:"Connection request not initialised!" })
+        toast_store.set({
+            show: true, error:true, 
+            message:"Connection request not initialised!" 
+        })
         return
     }
-    lwc.walletIsInstalled()
-        .then(installed=>{
-            if(installed){}
-            else {
-                toast_store.set({show: true, error:true, message:"install wallet" })
-            }
-        })
+    const handleResponse = (wInfo)=> {
+        response = "got an event!";
+        if (get(balance_tau_store) === "0"){
+            getTauBalance(wInfo.wallets[0]);
+        }
+        lwc.events.removeListener("newInfo", handleResponse);
+    }
+    lwc.events.on("newInfo", handleResponse)
+    lwc.sendConnection(connectionRequest)
+    setTimeout(() => {
+        if (response === undefined){
+            toast_store.set({ show: true, error:true, message:"install wallet" })   
+        }
+    }, 1000)
 }
 
 export const getCurrentWalletInfo = ()=>{
